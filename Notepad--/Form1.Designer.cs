@@ -53,11 +53,14 @@ namespace Notepad__
             this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openInTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeTabToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.deselectWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -67,8 +70,9 @@ namespace Notepad__
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -98,7 +102,8 @@ namespace Notepad__
             this.newTabToolStripMenuItem,
             this.closeTabToolStripMenuItem1,
             this.deselectWordToolStripMenuItem,
-            this.replaceToolStripMenuItem});
+            this.replaceToolStripMenuItem,
+            this.newWindowToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(3, 21);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(794, 27);
@@ -123,7 +128,7 @@ namespace Notepad__
             // 
             this.newToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -131,7 +136,7 @@ namespace Notepad__
             // 
             this.openToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -140,7 +145,7 @@ namespace Notepad__
             this.toolStripMenuItem2.BackColor = System.Drawing.Color.YellowGreen;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 24);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 24);
             this.toolStripMenuItem2.Text = "Save";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -148,7 +153,7 @@ namespace Notepad__
             // 
             this.saveAsToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -156,7 +161,7 @@ namespace Notepad__
             // 
             this.saveAllToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
             this.saveAllToolStripMenuItem.Text = "Save All";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
             // 
@@ -164,7 +169,7 @@ namespace Notepad__
             // 
             this.exitToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -175,7 +180,9 @@ namespace Notepad__
             this.fontsToolStripMenuItem,
             this.encodingToolStripMenuItem,
             this.addNewTabToolStripMenuItem,
-            this.closeTabToolStripMenuItem});
+            this.closeTabToolStripMenuItem,
+            this.addNewWindowToolStripMenuItem,
+            this.openInTabToolStripMenuItem});
             this.optionToolStripMenuItem.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
             this.optionToolStripMenuItem.Size = new System.Drawing.Size(63, 23);
@@ -188,7 +195,7 @@ namespace Notepad__
             this.darkModeToolStripMenuItem,
             this.lightModeToolStripMenuItem});
             this.styleToolStripMenuItem.Name = "styleToolStripMenuItem";
-            this.styleToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.styleToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
             this.styleToolStripMenuItem.Text = "Style";
             // 
             // darkModeToolStripMenuItem
@@ -211,7 +218,7 @@ namespace Notepad__
             // 
             this.fontsToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.fontsToolStripMenuItem.Name = "fontsToolStripMenuItem";
-            this.fontsToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.fontsToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
             this.fontsToolStripMenuItem.Text = "Fonts";
             this.fontsToolStripMenuItem.Click += new System.EventHandler(this.fontsToolStripMenuItem_Click);
             // 
@@ -222,7 +229,7 @@ namespace Notepad__
             this.aToolStripMenuItem,
             this.defaultToolStripMenuItem});
             this.encodingToolStripMenuItem.Name = "encodingToolStripMenuItem";
-            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
             this.encodingToolStripMenuItem.Text = "Encoding ";
             // 
             // aToolStripMenuItem
@@ -245,7 +252,7 @@ namespace Notepad__
             // 
             this.addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.addNewTabToolStripMenuItem.Name = "addNewTabToolStripMenuItem";
-            this.addNewTabToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.addNewTabToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
             this.addNewTabToolStripMenuItem.Text = "Add new Tab";
             this.addNewTabToolStripMenuItem.Click += new System.EventHandler(this.addNewTabToolStripMenuItem_Click);
             // 
@@ -253,9 +260,26 @@ namespace Notepad__
             // 
             this.closeTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.closeTabToolStripMenuItem.Name = "closeTabToolStripMenuItem";
-            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
             this.closeTabToolStripMenuItem.Text = "Close Tab";
             this.closeTabToolStripMenuItem.Click += new System.EventHandler(this.closeTabToolStripMenuItem_Click);
+            // 
+            // addNewWindowToolStripMenuItem
+            // 
+            this.addNewWindowToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            this.addNewWindowToolStripMenuItem.Name = "addNewWindowToolStripMenuItem";
+            this.addNewWindowToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
+            this.addNewWindowToolStripMenuItem.Text = "Open in MDI-window";
+            this.addNewWindowToolStripMenuItem.Click += new System.EventHandler(this.addNewWindowToolStripMenuItem_Click);
+            // 
+            // openInTabToolStripMenuItem
+            // 
+            this.openInTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            this.openInTabToolStripMenuItem.Name = "openInTabToolStripMenuItem";
+            this.openInTabToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
+            this.openInTabToolStripMenuItem.Text = "Open in Tab";
+            this.openInTabToolStripMenuItem.Visible = false;
+            this.openInTabToolStripMenuItem.Click += new System.EventHandler(this.openInTabToolStripMenuItem_Click);
             // 
             // searchToolStripMenuItem
             // 
@@ -296,6 +320,15 @@ namespace Notepad__
             this.replaceToolStripMenuItem.Size = new System.Drawing.Size(70, 23);
             this.replaceToolStripMenuItem.Text = "Replace";
             this.replaceToolStripMenuItem.Click += new System.EventHandler(this.replaceToolStripMenuItem_Click);
+            // 
+            // newWindowToolStripMenuItem
+            // 
+            this.newWindowToolStripMenuItem.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.newWindowToolStripMenuItem.Name = "newWindowToolStripMenuItem";
+            this.newWindowToolStripMenuItem.Size = new System.Drawing.Size(106, 23);
+            this.newWindowToolStripMenuItem.Text = "New Window";
+            this.newWindowToolStripMenuItem.Visible = false;
+            this.newWindowToolStripMenuItem.Click += new System.EventHandler(this.newWindowToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -342,7 +375,7 @@ namespace Notepad__
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -351,16 +384,15 @@ namespace Notepad__
             this.tabPage1.Text = "new";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // richTextBox1
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(786, 331);
-            this.textBox1.TabIndex = 0;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(786, 331);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
             // 
             // Form1
             // 
@@ -372,6 +404,7 @@ namespace Notepad__
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -385,41 +418,87 @@ namespace Notepad__
             this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
+       
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-           
-            string so = e.CloseReason.ToString();
-            string s1 = so.Replace(so, "Сохранить документ перед выходом?");
-            DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
-
-            // если пользователь нажал на кнопку 'No'
-            if (result == DialogResult.Cancel)
-            {
-                e.Cancel = true;
-            }
-            if (result == DialogResult.No)
-            {
+            if (e.CloseReason == CloseReason.MdiFormClosing)
+            {    
                 e.Cancel = false;
             }
-            if (result == DialogResult.Yes)
+            else
             {
-                SaveClose(sender, e);
-                if (sav == true) 
-                { 
-                    e.Cancel = false;
-                }
-                else
+                if (this.tabControl1.Visible == true)
                 {
-                    e.Cancel = true;
+                    string so = e.CloseReason.ToString();
+                    string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                    DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+
+                    // если пользователь нажал на кнопку 'No'
+
+                    if (result == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                    }
+                    if (result == DialogResult.No)
+                    {
+                        e.Cancel = false;
+                    }
+                    if (result == DialogResult.Yes)
+                    {
+                        SaveClose(sender, e);
+                        if (sav == true)
+                        {
+                            e.Cancel = false;
+                        }
+                        else
+                        {
+                            e.Cancel = true;
+                        }
+
+                    }
                 }
-                    
+                else if (this.tabControl1.Visible == false)
+                {
+                    string so = e.CloseReason.ToString();
+                    string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                    DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+
+                    // если пользователь нажал на кнопку 'No'
+
+                    if (result == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                    }
+                    if (result == DialogResult.No)
+                    {
+                        e.Cancel = false;
+
+                    }
+                    if (result == DialogResult.Yes)
+                    {
+                        SaveClose(sender, e);
+                        if (sav == true)
+                        {
+                            e.Cancel = false;
+                        }
+                        else
+                        {
+                            e.Cancel = true;
+                        }
+
+                    }
+
+                }
             }
+                
+            
+            
+            
+            
 
         }
 
@@ -450,7 +529,6 @@ namespace Notepad__
         private ToolStripMenuItem defaultToolStripMenuItem;
         private TabControl tabControl1;
         private TabPage tabPage1;
-        private TextBox textBox1;
         private ToolStripMenuItem saveAllToolStripMenuItem;
         private Timer timer1;
         private ToolStripMenuItem searchToolStripMenuItem;
@@ -460,6 +538,11 @@ namespace Notepad__
         private ToolStripMenuItem closeTabToolStripMenuItem1;
         private ToolStripMenuItem deselectWordToolStripMenuItem;
         private ToolStripMenuItem replaceToolStripMenuItem;
+        private ToolStripMenuItem addNewWindowToolStripMenuItem;
+        private ToolStripMenuItem newWindowToolStripMenuItem;
+        private ToolStripMenuItem openInTabToolStripMenuItem;
+        private RichTextBox richTextBox1;
+        private System.DirectoryServices.DirectoryEntry directoryEntry1;
     }
 }
 

@@ -15,7 +15,6 @@ namespace Notepad__
 
     public partial class Form1 : Form
     {
-
         List<string> pat = new List<string>();
         //string pat = null;
         Encoding encoding = Encoding.GetEncoding(1251);
@@ -28,7 +27,7 @@ namespace Notepad__
             InitializeComponent();
             if (fileName.Length > 0)
             {
-                this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text = File.ReadAllText(fileName, encoding);
+                this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text = File.ReadAllText(fileName, encoding);
                 pat.Add(fileName);
                 this.tabControl1.SelectedTab.Text = Path.GetFileName(fileName);
                 //toolStripStatusLabel2.Text = Path.GetFileName(fileName);
@@ -44,57 +43,100 @@ namespace Notepad__
             saveFileDialog1.Filter = "Text files|*.txt|All files|*";
             saveFileDialog1.FilterIndex = 1;
             //saveFileDialog1.CheckFileExists = true;
-
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            try
             {
-                if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text, encoding);
+                    if (this.tabControl1.Visible == true)
+                    {
+                        if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+                        {
+                            File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text, encoding);
 
-                    MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
-                    sav = true;
-                    pat.Add(saveFileDialog1.FileName);
-                    toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
-                    toolStripStatusLabel3.Text = encoding.BodyName;
-                }
-                else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
-                {
-                    File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            sav = true;
+                            pat.Add(saveFileDialog1.FileName);
+                            toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                            toolStripStatusLabel3.Text = encoding.BodyName;
+                        }
+                        else if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
+                        {
+                            File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
 
-                    MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
-                    sav = true;
-                    pat.Add(saveFileDialog1.FileName);
-                    toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
-                    toolStripStatusLabel3.Text = encoding.BodyName;
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            sav = true;
+                            pat.Add(saveFileDialog1.FileName);
+                            toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                            toolStripStatusLabel3.Text = encoding.BodyName;
+                        }
+
+                    }
+                    else if (this.tabControl1.Visible == false)
+                    {
+                        File.WriteAllText(saveFileDialog1.FileName, this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Text, encoding);
+
+                        MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                        sav = true;
+                        pat.Add(saveFileDialog1.FileName);
+                        this.ActiveMdiChild.Text = Path.GetFileName(saveFileDialog1.FileName);
+                        toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                    }
                 }
-               
+
+                encoding = Encoding.GetEncoding(1251);
             }
-            encoding = Encoding.GetEncoding(1251);
+            catch (Exception)
+            {
+
+                MessageBox.Show("Can`t save");
+            }
+            
 
         }
+       
         void Save()
         {
-            foreach (var item in pat)
+
+            if (this.tabControl1.Visible == true)
             {
-                if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+                foreach (var item in pat)
                 {
-                    if (item.Contains(this.tabControl1.SelectedTab.Text))
+                    if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
                     {
-                        File.WriteAllText(item, this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text, encoding);
-                        MessageBox.Show("Successful saved");
+                        if (item.Contains(this.tabControl1.SelectedTab.Text))
+                        {
+                            File.WriteAllText(item, this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text, encoding);
+                            MessageBox.Show("Successful saved");
+                        }
                     }
-                }
-                else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
-                {
-                    if (item.Contains(this.tabControl1.SelectedTab.Text))
+                    else if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
                     {
-                        File.WriteAllText(item, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
-                        MessageBox.Show("Successful saved");
+                        if (item.Contains(this.tabControl1.SelectedTab.Text))
+                        {
+                            File.WriteAllText(item, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
+                            MessageBox.Show("Successful saved");
+                        }
                     }
+
                 }
-                
 
             }
+            else if(this.tabControl1.Visible == false)
+            {
+                foreach (var item in pat)
+                {
+                   if (item.Contains(this.ActiveMdiChild.Text))
+                   {
+                       File.WriteAllText(item, this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Text, encoding);
+                       MessageBox.Show("Successful saved");
+                   }
+                  
+
+
+                }
+            }
+            
 
 
         }
@@ -114,6 +156,8 @@ namespace Notepad__
             saveAllToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             addNewTabToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            addNewWindowToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            addNewWindowToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             closeTabToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             closeTabToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             toolStripStatusLabel1.ForeColor = System.Drawing.Color.White;
@@ -124,6 +168,8 @@ namespace Notepad__
             newToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             openToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             openToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            openInTabToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            openInTabToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             toolStripMenuItem2.BackColor = System.Drawing.Color.Black;
             toolStripMenuItem2.ForeColor = System.Drawing.Color.White;
             saveAsToolStripMenuItem.BackColor = System.Drawing.Color.Black;
@@ -149,6 +195,8 @@ namespace Notepad__
             this.BackColor = System.Drawing.Color.White;
             addNewTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            addNewWindowToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            addNewWindowToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             closeTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             closeTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             saveAllToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
@@ -164,6 +212,8 @@ namespace Notepad__
             newToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             openToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             openToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            openInTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            openInTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             toolStripMenuItem2.BackColor = System.Drawing.Color.YellowGreen;
             toolStripMenuItem2.ForeColor = System.Drawing.Color.Black;
             saveAsToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
@@ -204,46 +254,66 @@ namespace Notepad__
             // Открытие диалога
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (countTab >= 0)
+                if (this.tabControl1.Visible == true)
                 {
-                    TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
-                    TextBox textBoxInTab = new TextBox();
-                    textBoxInTab.Dock = DockStyle.Fill;
-                    textBoxInTab.Multiline = true;
-                    textBoxInTab.ScrollBars = ScrollBars.Both;
-                    encoding = Encoding.GetEncoding(1251);
-                    str = File.ReadAllText(openFileDialog1.FileName, encoding);
-                    //textBox1.Text = str;
-                    textBoxInTab.Text = str;
-                    textBoxInTab.Parent = page;
-                    toolStripStatusLabel2.Text = Path.GetFileName(openFileDialog1.FileName);
-                    //this.tabPage1.Text = Path.GetFileName(openFileDialog1.FileName);
-                    pat.Add(openFileDialog1.FileName);
-                    toolStripStatusLabel3.Text = encoding.BodyName;
-                    tabControl1.TabPages.Add(page);
-                    tabControl1.SelectedTab = page;
-                    countTab++;
+                    if (countTab >= 0)
+                    {
+                        TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
+                        RichTextBox textBoxInTab = new RichTextBox();
+                        textBoxInTab.Dock = DockStyle.Fill;
+                        textBoxInTab.Multiline = true;
+                        textBoxInTab.Font = this.richTextBox1.Font;
+                        encoding = Encoding.GetEncoding(1251);
+                        str = File.ReadAllText(openFileDialog1.FileName, encoding);
+                        //textBox1.Text = str;
+                        textBoxInTab.Text = str;
+                        textBoxInTab.Parent = page;
+                        toolStripStatusLabel2.Text = Path.GetFileName(openFileDialog1.FileName);
+                        //this.tabPage1.Text = Path.GetFileName(openFileDialog1.FileName);
+                        pat.Add(openFileDialog1.FileName);
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                        tabControl1.TabPages.Add(page);
+                        tabControl1.SelectedTab = page;
+                        countTab++;
+                    }
+                    else
+                    {
+                        //TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
+                        //TextBox textBoxInTab = new TextBox();
+                        this.richTextBox1.Dock = DockStyle.Fill;
+                        this.richTextBox1.Multiline = true;                        
+                        encoding = Encoding.GetEncoding(1251);
+                        str = File.ReadAllText(openFileDialog1.FileName, encoding);
+                        //textBox1.Text = str;
+                        this.richTextBox1.Text = str;
+                        this.richTextBox1.Parent = this.tabPage1;
+                        toolStripStatusLabel2.Text = Path.GetFileName(openFileDialog1.FileName);
+                        this.tabPage1.Text = Path.GetFileName(openFileDialog1.FileName);
+                        pat.Add(openFileDialog1.FileName);
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                        countTab++;
+                        tabControl1.SelectedTab = this.tabPage1;
+                        //tabControl1.TabPages.Add(page);
+                    }
                 }
-                else
+                else if(this.tabControl1.Visible == false)
                 {
-                    //TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
-                    //TextBox textBoxInTab = new TextBox();
-                    this.textBox1.Dock = DockStyle.Fill;
-                    this.textBox1.Multiline = true;
-                    this.textBox1.ScrollBars = ScrollBars.Both;
-                    encoding = Encoding.GetEncoding(1251);
+                    ChildForm f2 = new ChildForm();
+                    f2.MdiParent = this;
+                    f2.Icon = this.Icon;
+                    f2.Text = Path.GetFileName(openFileDialog1.FileName);
+                    RichTextBox rich = new RichTextBox();
                     str = File.ReadAllText(openFileDialog1.FileName, encoding);
-                    //textBox1.Text = str;
-                    this.textBox1.Text = str;
-                    this.textBox1.Parent = this.tabPage1;
-                    toolStripStatusLabel2.Text = Path.GetFileName(openFileDialog1.FileName);
-                    this.tabPage1.Text = Path.GetFileName(openFileDialog1.FileName);
-                    pat.Add(openFileDialog1.FileName);
-                    toolStripStatusLabel3.Text = encoding.BodyName;
-                    countTab++;
-                    tabControl1.SelectedTab = this.tabPage1;
-                    //tabControl1.TabPages.Add(page);
+                    rich.Text = str;
+                    rich.Dock = DockStyle.Fill;
+                    rich.Multiline = true;
+                    f2.Controls.Add(rich);
+                    f2.FormClosing += F2_FormClosing;
+                    // показ дочернего MDI-окна
+                    f2.Show();
+                   
                 }
+                
 
 
             }
@@ -257,34 +327,78 @@ namespace Notepad__
 
         void CheckName(object sender, EventArgs e)
         {
-            this.toolStripStatusLabel2.Text = this.tabControl1.SelectedTab.Text;
-            if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+            try
             {
-                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                this.toolStripStatusLabel1.Text = Convert.ToString(text.SelectionStart) + "/" + Convert.ToString(text.Text.Length);
+                if (this.tabControl1.Visible == false)
+                {
+                    if (this.MdiChildren == null)
+                    {
+                        this.toolStripStatusLabel2.Text = "new";
+
+                    }
+                    if (this.ActiveMdiChild.Controls[0] is TextBox)
+                    {
+                        TextBox t = this.ActiveMdiChild.Controls.OfType<TextBox>().First();
+                        this.toolStripStatusLabel1.Text = Convert.ToString(t.SelectionStart) + "/" + Convert.ToString(t.Text.Length);
+                        this.toolStripStatusLabel2.Text = this.ActiveMdiChild.Text;
+                    }
+                    else if (this.ActiveMdiChild.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox t = this.ActiveMdiChild.Controls.OfType<RichTextBox>().First();
+                        this.toolStripStatusLabel1.Text = Convert.ToString(t.SelectionStart) + "/" + Convert.ToString(t.Text.Length);
+                        this.toolStripStatusLabel2.Text = this.ActiveMdiChild.Text;
+                    }
+
+                }
+                else if (this.tabControl1.Visible == true)
+                {
+                    this.toolStripStatusLabel2.Text = this.tabControl1.SelectedTab.Text;
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                        this.toolStripStatusLabel1.Text = Convert.ToString(text.SelectionStart) + "/" + Convert.ToString(text.Text.Length);
+                    }
+                    else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                        this.toolStripStatusLabel1.Text = Convert.ToString(text.SelectionStart) + "/" + Convert.ToString(text.Text.Length);
+                    }
+
+                }
             }
-            else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
+            catch (Exception)
             {
-                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
-                this.toolStripStatusLabel1.Text = Convert.ToString(text.SelectionStart) + "/" + Convert.ToString(text.Text.Length);
+
             }
             
+
+
+
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+            if (this.tabControl1.Visible == true)
             {
-                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                text.Clear();
-                tabControl1.SelectedTab.Text = "new";
+                if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                {
+                    TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                    text.Clear();
+                    tabControl1.SelectedTab.Text = "new";
+                }
+                else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                {
+                    RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                    text.Clear();
+                    tabControl1.SelectedTab.Text = "new";
+                }
             }
-            else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
+            else if(this.tabControl1.Visible == false)
             {
-                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
-                text.Clear();
-                tabControl1.SelectedTab.Text = "new";
+                this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Clear();
+                this.ActiveMdiChild.Text = "new";
             }
+            
            
         }
         private void SaveClose(object sender, EventArgs e)
@@ -293,15 +407,31 @@ namespace Notepad__
         }
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            if (this.tabControl1.SelectedTab.Text == "new")
+            if (this.tabControl1.Visible == true)
             {
-                SaveAs();
-            }
-            else
-            {
-                Save();
+                if (this.tabControl1.SelectedTab.Text == "new")
+                {
+                    SaveAs();
+                }
+                else
+                {
+                    Save();
 
+                }
             }
+            else if(this.tabControl1.Visible == false)
+            {
+                if (this.ActiveMdiChild.Text == "new")
+                {
+                    SaveAs();
+                }
+                else
+                {
+                    Save();
+
+                }
+            }
+            
 
         }
 
@@ -312,57 +442,126 @@ namespace Notepad__
             FontDialog fn = new FontDialog();
             if (fn.ShowDialog() == DialogResult.OK)
             {
-                this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Font = fn.Font;
+                if (this.tabControl1.Visible == true)
+                {
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        
+                        this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Font = fn.Font;
+                    }
+                    else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                       
+                        this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Font = fn.Font;
+                    }
+
+                }
+                else if(this.tabControl1.Visible == false)
+                {
+                    if (this.ActiveMdiChild.Controls[0] is TextBox)
+                    {
+                        this.ActiveMdiChild.Controls.OfType<TextBox>().First().Font = fn.Font;
+                    }
+                    else if (this.ActiveMdiChild.Controls[0] is RichTextBox)
+                    {
+                        this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Font = fn.Font;
+                    }
+                }
+                
             }
+            
            
         }
 
 
         private void UTF_8ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+            try
             {
-                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                str = text.Text;
-                byte[] conv = encoding.GetBytes(str);
-                text.Text = Encoding.UTF8.GetString(conv);
-                encoding = Encoding.UTF8;
-                toolStripStatusLabel3.Text = encoding.BodyName;
+                if (this.tabControl1.Visible == true)
+                {
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                        str = text.Text;
+                        byte[] conv = encoding.GetBytes(str);
+                        text.Text = Encoding.UTF8.GetString(conv);
+                        encoding = Encoding.UTF8;
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                    }
+                    else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                        str = text.Text;
+                        byte[] conv = encoding.GetBytes(str);
+                        text.Text = Encoding.UTF8.GetString(conv);
+                        encoding = Encoding.UTF8;
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                    }
+                }
+                else if (this.tabControl1.Visible == false)
+                {
+                    RichTextBox text = this.ActiveMdiChild.Controls.OfType<RichTextBox>().First();
+                    str = text.Text;
+                    byte[] conv = encoding.GetBytes(str);
+                    text.Text = Encoding.UTF8.GetString(conv);
+                    encoding = Encoding.UTF8;
+                    toolStripStatusLabel3.Text = encoding.BodyName;
+                }
             }
-            else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            catch (Exception)
             {
-                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
-                str = text.Text;
-                byte[] conv = encoding.GetBytes(str);
-                text.Text = Encoding.UTF8.GetString(conv);
-                encoding = Encoding.UTF8;
-                toolStripStatusLabel3.Text = encoding.BodyName;
+
+                MessageBox.Show("Fail!");
             }
+            
+            
             
 
         }
             
         private void WINDOS1251ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (this.tabControl1.Visible == true)
+                {
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                        str = text.Text;
+                        byte[] conv = encoding.GetBytes(str);
+                        text.Text = Encoding.GetEncoding(1251).GetString(conv);
+                        encoding = Encoding.GetEncoding(1251);
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                    }
+                    else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                        str = text.Text;
+                        byte[] conv = encoding.GetBytes(str);
+                        text.Text = Encoding.GetEncoding(1251).GetString(conv);
+                        encoding = Encoding.GetEncoding(1251);
+                        toolStripStatusLabel3.Text = encoding.BodyName;
+                    }
+                }
+                else if (this.tabControl1.Visible == false)
+                {
+                    RichTextBox text = this.ActiveMdiChild.Controls.OfType<RichTextBox>().First();
+                    str = text.Text;
+                    byte[] conv = encoding.GetBytes(str);
+                    text.Text = Encoding.GetEncoding(1251).GetString(conv);
+                    encoding = Encoding.GetEncoding(1251);
+                    toolStripStatusLabel3.Text = encoding.BodyName;
+                }
+            }
+            catch (Exception)
+            {
 
-            if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
-            {
-                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                str = text.Text;
-                byte[] conv = encoding.GetBytes(str);
-                text.Text = Encoding.GetEncoding(1251).GetString(conv);
-                encoding = Encoding.GetEncoding(1251);
-                toolStripStatusLabel3.Text = encoding.BodyName;
+                MessageBox.Show("Fail");
             }
-            else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
-            {
-                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
-                str = text.Text;
-                byte[] conv = encoding.GetBytes(str);
-                text.Text = Encoding.GetEncoding(1251).GetString(conv);
-                encoding = Encoding.GetEncoding(1251);
-                toolStripStatusLabel3.Text = encoding.BodyName;
-            }
+            
+            
 
         }
 
@@ -371,36 +570,60 @@ namespace Notepad__
             TabPage page = new TabPage("new");
 
             // создание текстового поля внутри вкладки
-            TextBox textBox = new TextBox();            
+            RichTextBox textBox = new RichTextBox();            
             textBox.Dock = DockStyle.Fill;
+            textBox.Font = this.richTextBox1.Font;
             textBox.Multiline = true;      
-            textBox.Parent = page;
-            textBox.ScrollBars = ScrollBars.Both;
+            textBox.Parent = page;            
             tabControl1.TabPages.Add(page);
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (TabPage item in tabControl1.TabPages)
+            if (this.tabControl1.Visible == true)
             {
-                saveFileDialog1.Title = "Save";
-                saveFileDialog1.Filter = "Text files|*.txt|All files|*";
-                saveFileDialog1.FilterIndex = 1;
-                //saveFileDialog1.CheckFileExists = true;
-
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                foreach (TabPage item in tabControl1.TabPages)
                 {
-                    if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
-                    {
-                        File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<TextBox>().First().Text, encoding);
+                    saveFileDialog1.Title = "Save";
+                    saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                    saveFileDialog1.FilterIndex = 1;
+                    //saveFileDialog1.CheckFileExists = true;
 
-                        MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
-                        sav = true;
-                        toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
-                        toolStripStatusLabel3.Text = encoding.BodyName;
-                    }
-                    else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                     {
+                        if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                        {
+                            File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<TextBox>().First().Text, encoding);
+
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            sav = true;
+                            toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                            toolStripStatusLabel3.Text = encoding.BodyName;
+                        }
+                        else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                        {
+                            File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<RichTextBox>().First().Text, encoding);
+
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            sav = true;
+                            toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                            toolStripStatusLabel3.Text = encoding.BodyName;
+                        }
+
+                    }
+                    encoding = Encoding.GetEncoding(1251);
+                }
+            }
+            else if(this.tabControl1.Visible == false)
+            {
+                foreach (Form item in this.MdiChildren)
+                {
+                    saveFileDialog1.Title = "Save";
+                    saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                    saveFileDialog1.FilterIndex = 1;
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        
                         File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<RichTextBox>().First().Text, encoding);
 
                         MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
@@ -412,6 +635,7 @@ namespace Notepad__
                 }
                 encoding = Encoding.GetEncoding(1251);
             }
+            
         }
         Form2 findDialog = null;
         private void searchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -465,37 +689,43 @@ namespace Notepad__
         }
         private void FindWord(string Source)
         {
-            
-            if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+            try
             {
-                TextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as TextBox;
-                RichTextBox temp = new RichTextBox();
-                temp.Text = mainTextBox.Text;
-                this.tabControl1.SelectedTab.Controls.Remove(this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First());
-                temp.Dock = DockStyle.Fill;                
-                temp.Multiline = true;
-                temp.Parent = this.tabControl1.SelectedTab;
-                Find(temp, Source, Color.Red);
-                //temp.SelectAll();
-                //temp.Focus();
-            }
-            else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
-            {
-                Find(this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First(), Source, Color.Red);
-                //this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().SelectAll();
-                //this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Focus();
-            }
-           
-            
-            //x = temp.Find(Source, RichTextBoxFinds.None);
-           
-            //MessageBox.Show(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()));
-            // //x = mainTextBox.SelectionStart;            
+                if (this.tabControl1.Visible == true)
+                {
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as TextBox;
+                        RichTextBox temp = new RichTextBox();
+                        temp.Text = mainTextBox.Text;
+                        this.tabControl1.SelectedTab.Controls.Remove(this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First());
+                        temp.Dock = DockStyle.Fill;
+                        temp.Multiline = true;
+                        temp.Parent = this.tabControl1.SelectedTab;
+                        Find(temp, Source, Color.Red);
 
-            // //mainTextBox.Select(mainTextBox.Text.IndexOf(Source, x), Source.Length);
-            // //mainTextBox.Focus();
-            // //x+= mainTextBox.SelectionStart;
-            //MessageBox.Show(Convert.ToString(x));
+                    }
+                    else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        Find(this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First(), Source, Color.Red);
+
+                    }
+                }
+                else if (this.tabControl1.Visible == false)
+                {
+                    Find(this.ActiveMdiChild.Controls.OfType<RichTextBox>().First(), Source, Color.Red);
+                }
+            }
+            catch (Exception)
+            {
+
+               
+            }
+            
+            
+           
+            
+           
 
         }
         private void closeTabToolStripMenuItem_Click(object sender, EventArgs e)
@@ -509,6 +739,10 @@ namespace Notepad__
 
         private void newTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (this.tabControl1.Visible == false)
+            {
+                this.tabControl1.Visible = true;
+            }
             TabPage page = new TabPage("new");
 
             // создание текстового поля внутри вкладки
@@ -530,20 +764,40 @@ namespace Notepad__
 
         private void deselectWordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
+            try
             {
-                TextBox textbox = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                textbox.ForeColor = Color.Black;
+                if (this.tabControl1.Visible == true)
+                {
+                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox textbox = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                        textbox.ForeColor = Color.Black;
 
+                    }
+                    else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox textbox = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+
+                        textbox.Select(textbox.SelectionStart, textbox.Text.Length);
+                        textbox.SelectionColor = Color.Black;
+
+                    }
+                }
+                else if (this.tabControl1.Visible == false)
+                {
+                    RichTextBox textbox = this.ActiveMdiChild.Controls.OfType<RichTextBox>().First();
+
+                    textbox.Select(textbox.SelectionStart, textbox.Text.Length);
+                    textbox.SelectionColor = Color.Black;
+                }
             }
-            else if(Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
+            catch (Exception)
             {
-                RichTextBox textbox = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
 
-                textbox.Select(textbox.SelectionStart, textbox.Text.Length);
-                textbox.SelectionColor = Color.Black;               
-
+                
             }
+            
+            
 
         }
         Form3 replaceDialog = null;
@@ -570,20 +824,203 @@ namespace Notepad__
         }
         private void ReplaceDialog_PerformReplace(string Source, string ReplaceStr)
         {
-            if (tabControl1.SelectedTab.Controls[0] is TextBox)
+            try
             {
-                TextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as TextBox;
-                string doc = mainTextBox.Text;
-                string newDoc = doc.Replace(Source, ReplaceStr);
-                mainTextBox.Text = newDoc;
+                if (this.tabControl1.Visible == true)
+                {
+                    if (tabControl1.SelectedTab.Controls[0] is TextBox)
+                    {
+                        TextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as TextBox;
+                        string doc = mainTextBox.Text;
+                        string newDoc = doc.Replace(Source, ReplaceStr);
+                        mainTextBox.Text = newDoc;
+                    }
+                    else if (tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as RichTextBox;
+                        string doc = mainTextBox.Text;
+                        string newDoc = doc.Replace(Source, ReplaceStr);
+                        mainTextBox.Text = newDoc;
+                    }
+                }
+                else if (this.tabControl1.Visible == false)
+                {
+                    RichTextBox mainTextBox = this.ActiveMdiChild.Controls[0] as RichTextBox;
+                    string doc = mainTextBox.Text;
+                    string newDoc = doc.Replace(Source, ReplaceStr);
+                    mainTextBox.Text = newDoc;
+                }
             }
-            else if(tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            catch (Exception)
             {
-                RichTextBox mainTextBox = tabControl1.SelectedTab.Controls[0] as RichTextBox;
-                string doc = mainTextBox.Text;
-                string newDoc = doc.Replace(Source, ReplaceStr);
-                mainTextBox.Text = newDoc;
+
+                
             }
+            
+            
+        }
+
+        private void addNewWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form[] form = this.MdiChildren;
+            if (form.Length==0)
+            {
+                this.newTabToolStripMenuItem.Visible = false;
+                this.closeTabToolStripMenuItem.Visible = false;
+                this.addNewTabToolStripMenuItem.Visible = false;
+                this.closeTabToolStripMenuItem1.Visible = false;
+                this.newWindowToolStripMenuItem.Visible = true;
+                this.openInTabToolStripMenuItem.Visible = true;
+                this.addNewWindowToolStripMenuItem.Visible = false;
+                foreach (TabPage item in this.tabControl1.TabPages)
+                {
+                    ChildForm f2 = new ChildForm();
+                    //RichTextBox text = new RichTextBox();
+
+                    if (item.Controls[0] is TextBox)
+                    {
+                        TextBox text = new TextBox();
+                        text.Dock = DockStyle.Fill;
+                        text.Multiline = true;
+                        text.ScrollBars = ScrollBars.Both;
+                        text.Text = item.Controls.OfType<TextBox>().First().Text;
+                        f2.Controls.Add(text);
+                    }
+                    else if (item.Controls[0] is RichTextBox)
+                    {
+                        RichTextBox text = new RichTextBox();
+                        text.Dock = DockStyle.Fill;
+                        text.Multiline = true;
+                        text.Text = item.Controls.OfType<RichTextBox>().First().Text;
+                        f2.Controls.Add(text);
+                    }
+                    this.tabControl1.TabPages.Remove(item);
+
+                    f2.MdiParent = this;
+                    f2.Icon = this.Icon;
+                    f2.Text = item.Text;
+                    f2.FormClosing += F2_FormClosing;
+                    // показ дочернего MDI-окна
+                    f2.Show();
+                }
+                this.tabControl1.Visible = false;
+            }
+            
+            //foreach (Control item in this.Controls)
+            //{
+            //    item.Dispose();
+            //}
+            //ChildForm f2 = new ChildForm();
+            
+            //f2.MdiParent = this;
+            //f2.Icon = this.Icon;
+            //f2.Text = this.Text;
+            
+            //// показ дочернего MDI-окна
+            //f2.Show();
+        }
+
+        private void F2_FormClosing(object sender, FormClosingEventArgs e)
+        {           
+                
+            if (e.CloseReason == CloseReason.MdiFormClosing)
+            {
+                e.Cancel = false;
+                this.Form1_FormClosing(sender, e);
+            }
+            else
+            {
+                string so = e.CloseReason.ToString();
+                string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = false;
+                }
+                if (result == DialogResult.Yes)
+                {
+                    toolStripMenuItem2_Click(sender, e);
+                    if (sav == true)
+                    {
+                        e.Cancel = false;
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
+
+                }
+            }
+                // если пользователь нажал на кнопку 'No'
+
+               
+        }
+
+        private void newWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChildForm f2 = new ChildForm();
+            f2.MdiParent = this;
+            f2.Icon = this.Icon;
+            f2.Text = "new";
+            RichTextBox text = new RichTextBox();
+            text.Dock = DockStyle.Fill;
+            text.Multiline = true;            
+            f2.Controls.Add(text);
+            f2.FormClosing += F2_FormClosing;
+            // показ дочернего MDI-окна
+            f2.Show();
+        }
+
+        private void openInTabToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form[] form = this.MdiChildren;
+            this.newTabToolStripMenuItem.Visible = true;
+            this.closeTabToolStripMenuItem.Visible = true;
+            this.addNewTabToolStripMenuItem.Visible = true;
+            this.closeTabToolStripMenuItem1.Visible = true;
+            this.newWindowToolStripMenuItem.Visible = false;
+            this.openInTabToolStripMenuItem.Visible = false;
+            this.addNewWindowToolStripMenuItem.Visible = true;
+            foreach (Form item in form)
+            {
+                TabPage page = new TabPage("new");
+
+                // создание текстового поля внутри вкладки
+               
+                
+                if (item.Controls[0] is RichTextBox)
+                {
+                    RichTextBox textBox = new RichTextBox();
+                    textBox.Dock = DockStyle.Fill;
+                    textBox.Multiline = true;
+                    textBox.Parent = page;
+                    RichTextBox text = item.Controls.OfType<RichTextBox>().First();
+                    textBox.Text = text.Text;
+                    this.tabControl1.TabPages.Add(page);
+                    this.tabControl1.Visible = true;
+                    
+                }
+                else if(item.Controls[0] is TextBox)
+                {
+                    TextBox textBox = new TextBox();
+                    textBox.Dock = DockStyle.Fill;
+                    textBox.Multiline = true;
+                    textBox.Parent = page;
+                    TextBox text = item.Controls.OfType<TextBox>().First();
+                    textBox.Text = text.Text;
+                    this.tabControl1.TabPages.Add(page);
+                    this.tabControl1.Visible = true;
+                    
+                }
+                item.Dispose();
+
+
+            }
+            
         }
     }
 }

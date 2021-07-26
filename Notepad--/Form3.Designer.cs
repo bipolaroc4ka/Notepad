@@ -41,7 +41,7 @@ namespace Notepad__
             this.textBox1.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(31, 43);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 29);
+            this.textBox1.Size = new System.Drawing.Size(355, 29);
             this.textBox1.TabIndex = 0;
             // 
             // textBox2
@@ -49,7 +49,7 @@ namespace Notepad__
             this.textBox2.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox2.Location = new System.Drawing.Point(31, 146);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 29);
+            this.textBox2.Size = new System.Drawing.Size(355, 29);
             this.textBox2.TabIndex = 1;
             // 
             // label1
@@ -97,7 +97,7 @@ namespace Notepad__
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form3";
-            this.Text = "Replace";            
+            this.Text = "Replace";
             this.ResumeLayout(false);
             this.PerformLayout();
 
