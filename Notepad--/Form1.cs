@@ -19,8 +19,7 @@ namespace Notepad__
         //string pat = null;
         Encoding encoding = Encoding.GetEncoding(1251);
         string str = "";
-        bool sav = false;
-        int countTab = 0;
+        bool sav = false;      
         public Form1() { }
         public Form1(string fileName)
         {
@@ -148,7 +147,8 @@ namespace Notepad__
         private void darkModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.BackColor = System.Drawing.Color.Black;
-
+            label1.BackColor = System.Drawing.Color.Black;
+            label1.ForeColor = System.Drawing.Color.White;
             menuStrip1.BackColor = System.Drawing.Color.Black;
             menuStrip1.ForeColor = System.Drawing.Color.White;
             groupBox1.ForeColor = System.Drawing.Color.White;
@@ -193,6 +193,8 @@ namespace Notepad__
         private void lightModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.BackColor = System.Drawing.Color.White;
+            label1.BackColor = System.Drawing.Color.White;
+            label1.ForeColor = System.Drawing.Color.Black;
             addNewTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             addNewWindowToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
@@ -254,10 +256,15 @@ namespace Notepad__
             // Открытие диалога
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (this.tabControl1.Visible == true)
+                if (this.label1.Text == "TAB")
                 {
-                    if (countTab >= 0)
+                    if (this.tabControl1.Visible==false)
                     {
+                        this.tabControl1.Visible = true;
+                    }
+                    if (this.tabControl1.TabPages.Count >= 0)
+                    {
+                        
                         TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
                         RichTextBox textBoxInTab = new RichTextBox();
                         textBoxInTab.Dock = DockStyle.Fill;
@@ -273,30 +280,12 @@ namespace Notepad__
                         pat.Add(openFileDialog1.FileName);
                         toolStripStatusLabel3.Text = encoding.BodyName;
                         tabControl1.TabPages.Add(page);
-                        tabControl1.SelectedTab = page;
-                        countTab++;
+                        tabControl1.SelectedTab = page;                        
+                        this.label1.Text = "TAB";
                     }
-                    else
-                    {
-                        //TabPage page = new TabPage(Path.GetFileName(openFileDialog1.FileName));
-                        //TextBox textBoxInTab = new TextBox();
-                        this.richTextBox1.Dock = DockStyle.Fill;
-                        this.richTextBox1.Multiline = true;                        
-                        encoding = Encoding.GetEncoding(1251);
-                        str = File.ReadAllText(openFileDialog1.FileName, encoding);
-                        //textBox1.Text = str;
-                        this.richTextBox1.Text = str;
-                        this.richTextBox1.Parent = this.tabPage1;
-                        toolStripStatusLabel2.Text = Path.GetFileName(openFileDialog1.FileName);
-                        this.tabPage1.Text = Path.GetFileName(openFileDialog1.FileName);
-                        pat.Add(openFileDialog1.FileName);
-                        toolStripStatusLabel3.Text = encoding.BodyName;
-                        countTab++;
-                        tabControl1.SelectedTab = this.tabPage1;
-                        //tabControl1.TabPages.Add(page);
-                    }
+                    
                 }
-                else if(this.tabControl1.Visible == false)
+                else if(this.label1.Text == "MDI")
                 {
                     ChildForm f2 = new ChildForm();
                     f2.MdiParent = this;
@@ -311,6 +300,7 @@ namespace Notepad__
                     f2.FormClosing += F2_FormClosing;
                     // показ дочернего MDI-окна
                     f2.Show();
+                    this.label1.Text = "MDI";
                    
                 }
                 
@@ -378,25 +368,13 @@ namespace Notepad__
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.tabControl1.Visible == true)
+            if (this.label1.Text == "TAB")
             {
-                if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
-                {
-                    TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-                    text.Clear();
-                    tabControl1.SelectedTab.Text = "new";
-                }
-                else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
-                {
-                    RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
-                    text.Clear();
-                    tabControl1.SelectedTab.Text = "new";
-                }
+                newTabToolStripMenuItem_Click(sender, e);
             }
-            else if(this.tabControl1.Visible == false)
+            else if(this.label1.Text == "MDI")
             {
-                this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Clear();
-                this.ActiveMdiChild.Text = "new";
+                newWindowToolStripMenuItem_Click(sender, e);
             }
             
            
@@ -439,36 +417,44 @@ namespace Notepad__
       
         private void fontsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FontDialog fn = new FontDialog();
-            if (fn.ShowDialog() == DialogResult.OK)
+            try
             {
-                if (this.tabControl1.Visible == true)
+                FontDialog fn = new FontDialog();
+                if (fn.ShowDialog() == DialogResult.OK)
                 {
-                    if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                    if (this.tabControl1.Visible == true)
                     {
-                        
-                        this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Font = fn.Font;
+                        if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                        {
+
+                            this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Font = fn.Font;
+                        }
+                        else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                        {
+
+                            this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Font = fn.Font;
+                        }
+
                     }
-                    else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                    else if (this.tabControl1.Visible == false)
                     {
-                       
-                        this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Font = fn.Font;
+                        if (this.ActiveMdiChild.Controls[0] is TextBox)
+                        {
+                            this.ActiveMdiChild.Controls.OfType<TextBox>().First().Font = fn.Font;
+                        }
+                        else if (this.ActiveMdiChild.Controls[0] is RichTextBox)
+                        {
+                            this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Font = fn.Font;
+                        }
                     }
 
                 }
-                else if(this.tabControl1.Visible == false)
-                {
-                    if (this.ActiveMdiChild.Controls[0] is TextBox)
-                    {
-                        this.ActiveMdiChild.Controls.OfType<TextBox>().First().Font = fn.Font;
-                    }
-                    else if (this.ActiveMdiChild.Controls[0] is RichTextBox)
-                    {
-                        this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Font = fn.Font;
-                    }
-                }
-                
             }
+            catch (Exception)
+            {
+
+            }
+            
             
            
         }
@@ -567,15 +553,32 @@ namespace Notepad__
 
         private void addNewTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TabPage page = new TabPage("new");
+            if (this.tabControl1.Visible == false)
+            {
+                this.tabControl1.Visible = true;
+                TabPage page = new TabPage("new");
 
-            // создание текстового поля внутри вкладки
-            RichTextBox textBox = new RichTextBox();            
-            textBox.Dock = DockStyle.Fill;
-            textBox.Font = this.richTextBox1.Font;
-            textBox.Multiline = true;      
-            textBox.Parent = page;            
-            tabControl1.TabPages.Add(page);
+                // создание текстового поля внутри вкладки
+                RichTextBox textBox = new RichTextBox();
+                textBox.Dock = DockStyle.Fill;
+                textBox.Font = this.richTextBox1.Font;
+                textBox.Multiline = true;
+                textBox.Parent = page;
+                tabControl1.TabPages.Add(page);
+            }
+            else
+            {
+                TabPage page = new TabPage("new");
+
+                // создание текстового поля внутри вкладки
+                RichTextBox textBox = new RichTextBox();
+                textBox.Dock = DockStyle.Fill;
+                textBox.Font = this.richTextBox1.Font;
+                textBox.Multiline = true;
+                textBox.Parent = page;
+                tabControl1.TabPages.Add(page);
+            }
+            
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -742,16 +745,28 @@ namespace Notepad__
             if (this.tabControl1.Visible == false)
             {
                 this.tabControl1.Visible = true;
-            }
-            TabPage page = new TabPage("new");
+                TabPage page = new TabPage("new");
 
-            // создание текстового поля внутри вкладки
-            TextBox textBox = new TextBox();
-            textBox.Dock = DockStyle.Fill;
-            textBox.Multiline = true;
-            textBox.Parent = page;
-            textBox.ScrollBars = ScrollBars.Both;           
-            tabControl1.TabPages.Add(page);
+                // создание текстового поля внутри вкладки
+                RichTextBox textBox = new RichTextBox();
+                textBox.Dock = DockStyle.Fill;
+                textBox.Font = this.richTextBox1.Font;
+                textBox.Multiline = true;
+                textBox.Parent = page;
+                tabControl1.TabPages.Add(page);
+            }
+            else
+            {
+                TabPage page = new TabPage("new");
+
+                // создание текстового поля внутри вкладки
+                RichTextBox textBox = new RichTextBox();
+                textBox.Dock = DockStyle.Fill;
+                textBox.Font = this.richTextBox1.Font;
+                textBox.Multiline = true;
+                textBox.Parent = page;
+                tabControl1.TabPages.Add(page);
+            }
         }
 
         private void closeTabToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -862,6 +877,7 @@ namespace Notepad__
 
         private void addNewWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.label1.Text = "MDI";
             Form[] form = this.MdiChildren;
             if (form.Length==0)
             {
@@ -923,8 +939,8 @@ namespace Notepad__
         }
 
         private void F2_FormClosing(object sender, FormClosingEventArgs e)
-        {           
-                
+        {
+            Form[] form = this.MdiChildren;
             if (e.CloseReason == CloseReason.MdiFormClosing)
             {
                 e.Cancel = false;
@@ -941,7 +957,9 @@ namespace Notepad__
                 }
                 if (result == DialogResult.No)
                 {
-                    e.Cancel = false;
+                    e.Cancel = false;                   
+                   
+                    
                 }
                 if (result == DialogResult.Yes)
                 {
@@ -949,6 +967,7 @@ namespace Notepad__
                     if (sav == true)
                     {
                         e.Cancel = false;
+                                               
                     }
                     else
                     {
@@ -964,21 +983,41 @@ namespace Notepad__
 
         private void newWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChildForm f2 = new ChildForm();
-            f2.MdiParent = this;
-            f2.Icon = this.Icon;
-            f2.Text = "new";
-            RichTextBox text = new RichTextBox();
-            text.Dock = DockStyle.Fill;
-            text.Multiline = true;            
-            f2.Controls.Add(text);
-            f2.FormClosing += F2_FormClosing;
-            // показ дочернего MDI-окна
-            f2.Show();
+            if (this.tabControl1.Visible == true)
+            {
+                this.tabControl1.Visible =false;
+                ChildForm f2 = new ChildForm();
+                f2.MdiParent = this;
+                f2.Icon = this.Icon;
+                f2.Text = "new";
+                RichTextBox text = new RichTextBox();
+                text.Dock = DockStyle.Fill;
+                text.Multiline = true;
+                f2.Controls.Add(text);
+                f2.FormClosing += F2_FormClosing;
+                // показ дочернего MDI-окна
+                f2.Show();
+            }
+            else
+            {
+                ChildForm f2 = new ChildForm();
+                f2.MdiParent = this;
+                f2.Icon = this.Icon;
+                f2.Text = "new";
+                RichTextBox text = new RichTextBox();
+                text.Dock = DockStyle.Fill;
+                text.Multiline = true;
+                f2.Controls.Add(text);
+                f2.FormClosing += F2_FormClosing;
+                // показ дочернего MDI-окна
+                f2.Show();
+            }
+            
         }
 
         private void openInTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.label1.Text = "TAB";
             Form[] form = this.MdiChildren;
             this.newTabToolStripMenuItem.Visible = true;
             this.closeTabToolStripMenuItem.Visible = true;
@@ -1021,6 +1060,7 @@ namespace Notepad__
                     
                 }
                 item.Dispose();
+               
 
 
             }
