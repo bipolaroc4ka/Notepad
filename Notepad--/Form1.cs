@@ -107,9 +107,15 @@ namespace Notepad__
         {
             this.BackColor = System.Drawing.Color.Black;
 
-            menuStrip1.BackColor = System.Drawing.Color.White;
-            menuStrip1.ForeColor = System.Drawing.Color.Black;
+            menuStrip1.BackColor = System.Drawing.Color.Black;
+            menuStrip1.ForeColor = System.Drawing.Color.White;
             groupBox1.ForeColor = System.Drawing.Color.White;
+            saveAllToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            saveAllToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            addNewTabToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            closeTabToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            closeTabToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             toolStripStatusLabel1.ForeColor = System.Drawing.Color.White;
             toolStripStatusLabel1.BackColor = System.Drawing.Color.Black;
             toolStripStatusLabel2.ForeColor = System.Drawing.Color.White;
@@ -141,6 +147,12 @@ namespace Notepad__
         private void lightModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.BackColor = System.Drawing.Color.White;
+            addNewTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            addNewTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            closeTabToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            closeTabToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
+            saveAllToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            saveAllToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             menuStrip1.BackColor = System.Drawing.Color.YellowGreen;
             menuStrip1.ForeColor = System.Drawing.Color.Black;
             groupBox1.ForeColor = System.Drawing.Color.Black;
@@ -170,6 +182,7 @@ namespace Notepad__
             encodingToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             toolStripStatusLabel3.BackColor = System.Drawing.Color.White;
             toolStripStatusLabel3.ForeColor = System.Drawing.Color.Black;
+            
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -307,24 +320,49 @@ namespace Notepad__
 
         private void UTF_8ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-            str = text.Text;
-            byte[] conv = encoding.GetBytes(str);
-            text.Text = Encoding.UTF8.GetString(conv);
-            encoding = Encoding.UTF8;
-            toolStripStatusLabel3.Text = encoding.BodyName;
+            if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+            {
+                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                str = text.Text;
+                byte[] conv = encoding.GetBytes(str);
+                text.Text = Encoding.UTF8.GetString(conv);
+                encoding = Encoding.UTF8;
+                toolStripStatusLabel3.Text = encoding.BodyName;
+            }
+            else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            {
+                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                str = text.Text;
+                byte[] conv = encoding.GetBytes(str);
+                text.Text = Encoding.UTF8.GetString(conv);
+                encoding = Encoding.UTF8;
+                toolStripStatusLabel3.Text = encoding.BodyName;
+            }
+            
 
         }
             
         private void WINDOS1251ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
-            str = text.Text;
-            byte[] conv = encoding.GetBytes(str);
-            text.Text = Encoding.GetEncoding(1251).GetString(conv);
-            encoding = Encoding.GetEncoding(1251);
-            toolStripStatusLabel3.Text = encoding.BodyName;
+            if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+            {
+                TextBox text = this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First();
+                str = text.Text;
+                byte[] conv = encoding.GetBytes(str);
+                text.Text = Encoding.GetEncoding(1251).GetString(conv);
+                encoding = Encoding.GetEncoding(1251);
+                toolStripStatusLabel3.Text = encoding.BodyName;
+            }
+            else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            {
+                RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+                str = text.Text;
+                byte[] conv = encoding.GetBytes(str);
+                text.Text = Encoding.GetEncoding(1251).GetString(conv);
+                encoding = Encoding.GetEncoding(1251);
+                toolStripStatusLabel3.Text = encoding.BodyName;
+            }
 
         }
 
@@ -383,7 +421,7 @@ namespace Notepad__
                 findDialog = new Form2();
                 findDialog.Find += FindWord;
                 findDialog.Icon = this.Icon;
-                findDialog.BackColor = this.BackColor;
+                
             }
             else
             {
@@ -391,7 +429,7 @@ namespace Notepad__
                 findDialog = new Form2();
                 findDialog.Find += FindWord;
                 findDialog.Icon = this.Icon;
-                findDialog.BackColor = this.BackColor;
+                
             }
 
             findDialog.Show();
@@ -434,14 +472,14 @@ namespace Notepad__
                 RichTextBox temp = new RichTextBox();
                 temp.Text = mainTextBox.Text;
                 this.tabControl1.SelectedTab.Controls.Remove(this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First());
-                temp.Dock = DockStyle.Fill;
+                temp.Dock = DockStyle.Fill;                
                 temp.Multiline = true;
                 temp.Parent = this.tabControl1.SelectedTab;
                 Find(temp, Source, Color.Red);
                 //temp.SelectAll();
                 //temp.Focus();
             }
-            else
+            else if(this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
             {
                 Find(this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First(), Source, Color.Red);
                 //this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().SelectAll();
@@ -478,7 +516,7 @@ namespace Notepad__
             textBox.Dock = DockStyle.Fill;
             textBox.Multiline = true;
             textBox.Parent = page;
-            textBox.ScrollBars = ScrollBars.Both;
+            textBox.ScrollBars = ScrollBars.Both;           
             tabControl1.TabPages.Add(page);
         }
 
@@ -517,7 +555,7 @@ namespace Notepad__
                 replaceDialog = new Form3();
                 replaceDialog.Replace += ReplaceDialog_PerformReplace;
                 replaceDialog.Icon = this.Icon;
-                replaceDialog.BackColor = this.BackColor;
+                
             }
             else
             {
@@ -525,7 +563,7 @@ namespace Notepad__
                 replaceDialog = new Form3();
                 replaceDialog.Replace += ReplaceDialog_PerformReplace;
                 replaceDialog.Icon = this.Icon;
-                replaceDialog.BackColor = this.BackColor;
+                
             }
 
             replaceDialog.Show();

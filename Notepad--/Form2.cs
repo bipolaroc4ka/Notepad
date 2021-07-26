@@ -18,6 +18,14 @@ namespace Notepad__
         public Form2()
         {
             InitializeComponent();
+            if (this.ForeColor == Color.Black)
+            {
+                label1.ForeColor = Color.White;
+            }
+            else if(this.ForeColor == Color.White)
+            {
+                label1.ForeColor = Color.Black;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
