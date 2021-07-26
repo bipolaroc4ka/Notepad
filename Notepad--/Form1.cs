@@ -883,6 +883,7 @@ namespace Notepad__
                         text.Dock = DockStyle.Fill;
                         text.Multiline = true;
                         text.ScrollBars = ScrollBars.Both;
+                        text.Font = item.Controls.OfType<TextBox>().First().Font;
                         text.Text = item.Controls.OfType<TextBox>().First().Text;
                         f2.Controls.Add(text);
                     }
@@ -891,6 +892,7 @@ namespace Notepad__
                         RichTextBox text = new RichTextBox();
                         text.Dock = DockStyle.Fill;
                         text.Multiline = true;
+                        text.Font = item.Controls.OfType<RichTextBox>().First().Font;
                         text.Text = item.Controls.OfType<RichTextBox>().First().Text;
                         f2.Controls.Add(text);
                     }
@@ -997,6 +999,7 @@ namespace Notepad__
                     RichTextBox textBox = new RichTextBox();
                     textBox.Dock = DockStyle.Fill;
                     textBox.Multiline = true;
+                    textBox.Font = item.Controls.OfType<RichTextBox>().First().Font;
                     textBox.Parent = page;
                     RichTextBox text = item.Controls.OfType<RichTextBox>().First();
                     textBox.Text = text.Text;
@@ -1009,6 +1012,7 @@ namespace Notepad__
                     TextBox textBox = new TextBox();
                     textBox.Dock = DockStyle.Fill;
                     textBox.Multiline = true;
+                    textBox.Font = item.Controls.OfType<TextBox>().First().Font;
                     textBox.Parent = page;
                     TextBox text = item.Controls.OfType<TextBox>().First();
                     textBox.Text = text.Text;
