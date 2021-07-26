@@ -54,6 +54,9 @@ namespace Notepad__
             this.addNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeTabToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.deselectWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -65,6 +68,7 @@ namespace Notepad__
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -89,7 +93,11 @@ namespace Notepad__
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.optionToolStripMenuItem,
-            this.searchToolStripMenuItem});
+            this.searchToolStripMenuItem,
+            this.newTabToolStripMenuItem,
+            this.closeTabToolStripMenuItem1,
+            this.deselectWordToolStripMenuItem,
+            this.replaceToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(3, 16);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(794, 24);
@@ -253,6 +261,27 @@ namespace Notepad__
             this.searchToolStripMenuItem.Text = "Search";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.searchToolStripMenuItem_Click);
             // 
+            // newTabToolStripMenuItem
+            // 
+            this.newTabToolStripMenuItem.Name = "newTabToolStripMenuItem";
+            this.newTabToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.newTabToolStripMenuItem.Text = "New Tab";
+            this.newTabToolStripMenuItem.Click += new System.EventHandler(this.newTabToolStripMenuItem_Click);
+            // 
+            // closeTabToolStripMenuItem1
+            // 
+            this.closeTabToolStripMenuItem1.Name = "closeTabToolStripMenuItem1";
+            this.closeTabToolStripMenuItem1.Size = new System.Drawing.Size(69, 20);
+            this.closeTabToolStripMenuItem1.Text = "Close Tab";
+            this.closeTabToolStripMenuItem1.Click += new System.EventHandler(this.closeTabToolStripMenuItem1_Click);
+            // 
+            // deselectWordToolStripMenuItem
+            // 
+            this.deselectWordToolStripMenuItem.Name = "deselectWordToolStripMenuItem";
+            this.deselectWordToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.deselectWordToolStripMenuItem.Text = "Deselect word";
+            this.deselectWordToolStripMenuItem.Click += new System.EventHandler(this.deselectWordToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.SystemColors.Window;
@@ -289,6 +318,7 @@ namespace Notepad__
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.tabControl1.Location = new System.Drawing.Point(0, 58);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -298,10 +328,10 @@ namespace Notepad__
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.textBox1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 344);
+            this.tabPage1.Size = new System.Drawing.Size(792, 337);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "new";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -309,12 +339,20 @@ namespace Notepad__
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
             this.textBox1.Location = new System.Drawing.Point(3, 3);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(786, 338);
+            this.textBox1.Size = new System.Drawing.Size(786, 331);
             this.textBox1.TabIndex = 0;
+            // 
+            // replaceToolStripMenuItem
+            // 
+            this.replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
+            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.replaceToolStripMenuItem.Text = "Replace";
+            this.replaceToolStripMenuItem.Click += new System.EventHandler(this.replaceToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -363,7 +401,7 @@ namespace Notepad__
             }
             if (result == DialogResult.Yes)
             {
-                toolStripMenuItem2_Click(sender, e);
+                SaveClose(sender, e);
                 if (sav == true) 
                 { 
                     e.Cancel = false;
@@ -410,6 +448,10 @@ namespace Notepad__
         private ToolStripMenuItem searchToolStripMenuItem;
         private ToolStripMenuItem addNewTabToolStripMenuItem;
         private ToolStripMenuItem closeTabToolStripMenuItem;
+        private ToolStripMenuItem newTabToolStripMenuItem;
+        private ToolStripMenuItem closeTabToolStripMenuItem1;
+        private ToolStripMenuItem deselectWordToolStripMenuItem;
+        private ToolStripMenuItem replaceToolStripMenuItem;
     }
 }
 

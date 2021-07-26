@@ -10,22 +10,18 @@ using System.Windows.Forms;
 
 namespace Notepad__
 {
-    public delegate void FindWordDelegate(string Source);
-    public partial class Form2 : Form
+    public delegate void ReplaceDelegate(string Source, string ReplaceStr);
+    public partial class Form3 : Form
     {
-        public event FindWordDelegate Find;
-
-        public Form2()
+        public event ReplaceDelegate Replace;
+        public Form3()
         {
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string str = textBox1.Text;
-            Find?.Invoke(str);
-            //MessageBox.Show(str);
-
+            Replace?.Invoke(textBox1.Text, textBox2.Text);
         }
     }
 }
