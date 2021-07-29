@@ -129,7 +129,7 @@ namespace Notepad__
             // 
             this.newToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -137,7 +137,7 @@ namespace Notepad__
             // 
             this.openToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -146,7 +146,7 @@ namespace Notepad__
             this.toolStripMenuItem2.BackColor = System.Drawing.Color.YellowGreen;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 24);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 24);
             this.toolStripMenuItem2.Text = "Save";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -154,7 +154,7 @@ namespace Notepad__
             // 
             this.saveAsToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -162,7 +162,7 @@ namespace Notepad__
             // 
             this.saveAllToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.saveAllToolStripMenuItem.Text = "Save All";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
             // 
@@ -170,7 +170,7 @@ namespace Notepad__
             // 
             this.exitToolStripMenuItem.BackColor = System.Drawing.Color.YellowGreen;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(164, 24);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -437,72 +437,112 @@ namespace Notepad__
        
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            int xxx = 0;
             if (e.CloseReason == CloseReason.MdiFormClosing)
             {    
                 e.Cancel = false;
             }
             else
             {
-                if (this.tabControl1.Visible == true)
+                if (this.label1.Text == "TAB")
                 {
-                    string so = e.CloseReason.ToString();
-                    string s1 = so.Replace(so, "Сохранить документ перед выходом?");
-                    DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
-
-                    // если пользователь нажал на кнопку 'No'
-
-                    if (result == DialogResult.Cancel)
+                    foreach (TabPage item in this.tabControl1.TabPages)
                     {
-                        e.Cancel = true;
+                        RichTextBox r = item.Controls[0] as RichTextBox;
+                        if (r.Text.Length==0)
+                        {
+                            xxx++;
+                        }
+                        
                     }
-                    if (result == DialogResult.No)
+                    if (xxx == this.tabControl1.TabPages.Count)
                     {
                         e.Cancel = false;
                     }
-                    if (result == DialogResult.Yes)
+                    else
                     {
-                        SaveClose(sender, e);
-                        if (sav == true)
-                        {
-                            e.Cancel = false;
-                        }
-                        else
+                        string so = e.CloseReason.ToString();
+                        string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                        DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+
+                        // если пользователь нажал на кнопку 'No'
+
+                        if (result == DialogResult.Cancel)
                         {
                             e.Cancel = true;
                         }
+                        if (result == DialogResult.No)
+                        {
+                            e.Cancel = false;
+                        }
+                        if (result == DialogResult.Yes)
+                        {
+                            SaveClose(sender, e);                            
+                            if (sav == true)
+                            {
+                                e.Cancel = false;
+                            }
+                            else
+                            {
+                                e.Cancel = true;
+                            }
 
+                        }
                     }
+
+
                 }
-                else if (this.tabControl1.Visible == false)
+                
+                else if (this.label1.Text == "MDI")
                 {
-                    string so = e.CloseReason.ToString();
-                    string s1 = so.Replace(so, "Сохранить документ перед выходом?");
-                    DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
-
-                    // если пользователь нажал на кнопку 'No'
-
-                    if (result == DialogResult.Cancel)
+                    int xxxMDI = 0;
+                    foreach (Form item in this.MdiChildren)
                     {
-                        e.Cancel = true;
+                        RichTextBox r = item.Controls[0] as RichTextBox;
+                        if (r.Text.Length==0)
+                        {
+                            xxxMDI++;                            
+                        }
+                        
                     }
-                    if (result == DialogResult.No)
+                    if (this.MdiChildren.Length == xxxMDI)
                     {
                         e.Cancel = false;
-
                     }
-                    if (result == DialogResult.Yes)
+                    else
                     {
-                        SaveClose(sender, e);
-                        if (sav == true)
-                        {
-                            e.Cancel = false;
-                        }
-                        else
+                        string so = e.CloseReason.ToString();
+                        string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                        DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+
+                        // если пользователь нажал на кнопку 'No'
+
+                        if (result == DialogResult.Cancel)
                         {
                             e.Cancel = true;
                         }
+                        if (result == DialogResult.No)
+                        {
+                            e.Cancel = false;
 
+                        }
+                        if (result == DialogResult.Yes)
+                        {
+
+                            SaveClose(sender, e);
+
+                            if (sav == true)
+                            {
+                                e.Cancel = false;
+                            }
+                            else
+                            {
+                                e.Cancel = true;
+                            }
+
+                        }
                     }
+
 
                 }
             }

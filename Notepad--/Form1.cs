@@ -42,12 +42,14 @@ namespace Notepad__
             saveFileDialog1.Filter = "Text files|*.txt|All files|*";
             saveFileDialog1.FilterIndex = 1;
             //saveFileDialog1.CheckFileExists = true;
-            try
-            {
+            //try
+            //{
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    if (this.tabControl1.Visible == true)
+                   
+                    if (this.label1.Text == "TAB")
                     {
+                   
                         if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.TextBox")
                         {
                             File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<TextBox>().First().Text, encoding);
@@ -60,17 +62,18 @@ namespace Notepad__
                         }
                         else if (Convert.ToString(this.tabControl1.SelectedTab.Controls[0].GetType()) == "System.Windows.Forms.RichTextBox")
                         {
+                        
                             File.WriteAllText(saveFileDialog1.FileName, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
 
                             MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
                             sav = true;
                             pat.Add(saveFileDialog1.FileName);
-                            toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
+                            this.tabControl1.SelectedTab.Text = Path.GetFileName(saveFileDialog1.FileName);
                             toolStripStatusLabel3.Text = encoding.BodyName;
                         }
 
                     }
-                    else if (this.tabControl1.Visible == false)
+                    else if (this.label1.Text == "MDI")
                     {
                         File.WriteAllText(saveFileDialog1.FileName, this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Text, encoding);
 
@@ -84,12 +87,12 @@ namespace Notepad__
                 }
 
                 encoding = Encoding.GetEncoding(1251);
-            }
-            catch (Exception)
-            {
+            //}
+            //catch (Exception)
+            //{
 
-                MessageBox.Show("Can`t save");
-            }
+            //    MessageBox.Show("Can`t save");
+            //}
             
 
         }
@@ -97,7 +100,7 @@ namespace Notepad__
         void Save()
         {
 
-            if (this.tabControl1.Visible == true)
+            if (this.label1.Text == "TAB")
             {
                 foreach (var item in pat)
                 {
@@ -114,6 +117,7 @@ namespace Notepad__
                         if (item.Contains(this.tabControl1.SelectedTab.Text))
                         {
                             File.WriteAllText(item, this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text, encoding);
+                            
                             MessageBox.Show("Successful saved");
                         }
                     }
@@ -121,7 +125,7 @@ namespace Notepad__
                 }
 
             }
-            else if(this.tabControl1.Visible == false)
+            else if(this.label1.Text == "MDI")
             {
                 foreach (var item in pat)
                 {
@@ -297,6 +301,7 @@ namespace Notepad__
                     rich.Dock = DockStyle.Fill;
                     rich.Multiline = true;
                     f2.Controls.Add(rich);
+                    pat.Add(openFileDialog1.FileName);
                     f2.FormClosing += F2_FormClosing;
                     // показ дочернего MDI-окна
                     f2.Show();
@@ -351,6 +356,7 @@ namespace Notepad__
                     else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
                     {
                         RichTextBox text = this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First();
+
                         this.toolStripStatusLabel1.Text = Convert.ToString(text.SelectionStart) + "/" + Convert.ToString(text.Text.Length);
                     }
 
@@ -360,7 +366,7 @@ namespace Notepad__
             {
 
             }
-            
+
 
 
 
@@ -381,11 +387,123 @@ namespace Notepad__
         }
         private void SaveClose(object sender, EventArgs e)
         {
-            saveAllToolStripMenuItem_Click(sender, e);
+            
+            if (this.label1.Text == "TAB")
+            {
+                if (pat.Count==0&& this.tabControl1.SelectedTab.Controls.OfType<RichTextBox>().First().Text.Length!=0)
+                {
+                    MessageBox.Show(Convert.ToString(pat.Count));
+                    saveFileDialog1.Title = this.tabControl1.SelectedTab.Text;
+                    saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                    saveFileDialog1.FilterIndex = 1;
+
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        RichTextBox r = this.tabControl1.SelectedTab.Controls[0] as RichTextBox;
+                        File.WriteAllText(saveFileDialog1.FileName, r.Text, encoding);
+                        MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                        sav = true;
+
+                    }
+                }
+                foreach (TabPage item in this.tabControl1.TabPages)
+                {
+                    foreach (var item1 in pat)
+                    {
+                        if (item1.Contains(item.Text))
+                        {
+                            RichTextBox r = item.Controls[0] as RichTextBox;
+                            File.WriteAllText(item1, r.Text, encoding);
+                            MessageBox.Show(item1 + " \nSuccessful saved");
+                            if (sav != true)
+                            {
+                                sav = true;
+                            }
+                        }                        
+                    }
+                    if (item.Text == "new" && item.Controls.OfType<RichTextBox>().First().Text.Length != 0)
+                    {
+                        saveFileDialog1.Title = item.Text;
+                        saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                        saveFileDialog1.FilterIndex = 1;
+
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            RichTextBox r = item.Controls[0] as RichTextBox;
+                            File.WriteAllText(saveFileDialog1.FileName, r.Text, encoding);
+
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            if (sav != true)
+                            {
+                                sav = true;
+                            }
+                        }
+                    }
+                    
+
+                }
+                
+            }
+            else if(this.label1.Text == "MDI")
+            {
+                if (pat.Count == 0 && this.ActiveMdiChild.Controls.OfType<RichTextBox>().First().Text.Length != 0)
+                {
+                    MessageBox.Show(Convert.ToString(pat.Count));
+                    saveFileDialog1.Title = this.ActiveMdiChild.Text;
+                    saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                    saveFileDialog1.FilterIndex = 1;
+
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        RichTextBox r = this.ActiveMdiChild.Controls[0] as RichTextBox;
+                        File.WriteAllText(saveFileDialog1.FileName, r.Text, encoding);
+                        MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                        sav = true;
+
+                    }
+                }
+
+                foreach (Form item in this.MdiChildren)
+                {
+                    foreach (var item1 in pat)
+                    {
+                        if (item1.Contains(item.Text))
+                        {
+                            RichTextBox r = item.Controls[0] as RichTextBox;
+                            File.WriteAllText(item1, r.Text, encoding);
+                            MessageBox.Show(item1 + " \nSuccessful saved");
+                            if (sav != true)
+                            {
+                                sav = true;
+                            }
+                        }
+                    }
+                    if (item.Text == "new" && item.Controls.OfType<RichTextBox>().First().Text.Length!=0)
+                    {
+                        saveFileDialog1.Title = item.Text;
+                        saveFileDialog1.Filter = "Text files|*.txt|All files|*";
+                        saveFileDialog1.FilterIndex = 1;
+
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            RichTextBox r = item.Controls[0] as RichTextBox;
+                            File.WriteAllText(saveFileDialog1.FileName, r.Text, encoding);
+                            MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
+                            sav = true;
+
+                        }
+                    }
+                   
+
+                }
+
+
+            }
+           //saveAllToolStripMenuItem_Click(sender, e);
         }
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            if (this.tabControl1.Visible == true)
+            if (this.label1.Text == "TAB")
             {
                 if (this.tabControl1.SelectedTab.Text == "new")
                 {
@@ -397,7 +515,7 @@ namespace Notepad__
 
                 }
             }
-            else if(this.tabControl1.Visible == false)
+            else if(this.label1.Text == "MDI")
             {
                 if (this.ActiveMdiChild.Text == "new")
                 {
@@ -583,18 +701,18 @@ namespace Notepad__
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.tabControl1.Visible == true)
+            if (this.label1.Text == "TAB")
             {
                 foreach (TabPage item in tabControl1.TabPages)
                 {
-                    saveFileDialog1.Title = "Save";
+                    saveFileDialog1.Title = item.Text;
                     saveFileDialog1.Filter = "Text files|*.txt|All files|*";
                     saveFileDialog1.FilterIndex = 1;
                     //saveFileDialog1.CheckFileExists = true;
 
                     if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        if (this.tabControl1.SelectedTab.Controls[0] is TextBox)
+                        if (item.Controls[0] is TextBox)
                         {
                             File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<TextBox>().First().Text, encoding);
 
@@ -603,7 +721,7 @@ namespace Notepad__
                             toolStripStatusLabel2.Text = Path.GetFileName(saveFileDialog1.FileName);
                             toolStripStatusLabel3.Text = encoding.BodyName;
                         }
-                        else if (this.tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                        else if (item.Controls[0] is RichTextBox)
                         {
                             File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<RichTextBox>().First().Text, encoding);
 
@@ -617,16 +735,15 @@ namespace Notepad__
                     encoding = Encoding.GetEncoding(1251);
                 }
             }
-            else if(this.tabControl1.Visible == false)
+            else if(this.label1.Text == "MDI")
             {
                 foreach (Form item in this.MdiChildren)
                 {
-                    saveFileDialog1.Title = "Save";
+                    saveFileDialog1.Title = item.Text;
                     saveFileDialog1.Filter = "Text files|*.txt|All files|*";
                     saveFileDialog1.FilterIndex = 1;
                     if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        
                         File.WriteAllText(saveFileDialog1.FileName, item.Controls.OfType<RichTextBox>().First().Text, encoding);
 
                         MessageBox.Show(saveFileDialog1.FileName + " \nSuccessful saved");
@@ -940,7 +1057,7 @@ namespace Notepad__
 
         private void F2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Form[] form = this.MdiChildren;
+            //Form[] form = this.MdiChildren;
             if (e.CloseReason == CloseReason.MdiFormClosing)
             {
                 e.Cancel = false;
@@ -948,33 +1065,41 @@ namespace Notepad__
             }
             else
             {
-                string so = e.CloseReason.ToString();
-                string s1 = so.Replace(so, "Сохранить документ перед выходом?");
-                DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Cancel)
+                RichTextBox r = this.ActiveMdiChild.Controls[0] as RichTextBox;
+                if (r.Text.Length==0)
                 {
-                    e.Cancel = true;
+                    e.Cancel = false;
                 }
-                if (result == DialogResult.No)
+                else
                 {
-                    e.Cancel = false;                   
-                   
-                    
-                }
-                if (result == DialogResult.Yes)
-                {
-                    toolStripMenuItem2_Click(sender, e);
-                    if (sav == true)
-                    {
-                        e.Cancel = false;
-                                               
-                    }
-                    else
+                    string so = e.CloseReason.ToString();
+                    string s1 = so.Replace(so, "Сохранить документ перед выходом?");
+                    DialogResult result = MessageBox.Show(s1, "Выход", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Cancel)
                     {
                         e.Cancel = true;
                     }
+                    if (result == DialogResult.No)
+                    {
+                        e.Cancel = false;
 
+                    }
+                    if (result == DialogResult.Yes)
+                    {
+                        SaveClose(sender, e);
+                        if (sav == true)
+                        {
+                            e.Cancel = false;
+
+                        }
+                        else
+                        {
+                            e.Cancel = true;
+                        }
+
+                    }
                 }
+                
             }
                 // если пользователь нажал на кнопку 'No'
 
